@@ -9,6 +9,8 @@ import logging
 from ask_sdk.standard import StandardSkillBuilder
 from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_core.handler_input import HandlerInput
+from ask_sdk_core.dispatch_components import AbstractRequestHandler
+from ask_sdk_model.ui import SimpleCard
 
 from ask_sdk_model import Response
 
@@ -31,12 +33,15 @@ def launch_request_handler(handler_input):
         attr['ended_session_count'] = 0
         attr['games_played'] = 0
         attr['game_state'] = 'ENDED'
+        attr['player_position_x'] = 0
+        attr['player_position_y'] = 0
+        attr['number_turns_remaining'] = 8
 
     handler_input.attributes_manager.session_attributes = attr
 
     speech_text = (
-        "Welcome to the High Low guessing game. You have played {} times. "
-        "Would you like to play?".format(attr["games_played"]))
+        "Welcome to the crazy maze (insert audio here) "
+        "<audio src='soundbank://soundlibrary/animals/amzn_sfx_bear_groan_roar_01'/>")
     reprompt = "Say yes to start the game or no to quit."
 
     handler_input.response_builder.speak(speech_text).ask(reprompt)
@@ -133,6 +138,67 @@ def no_handler(handler_input):
 
     handler_input.response_builder.speak(speech_text)
     return handler_input.response_builder.response
+
+
+
+# class MoveIntentHandler(AbstractRequestHandler):
+#     """Handler for Movement Intent."""
+#     def can_handle(self, handler_input):
+#         # type: (HandlerInput) -> bool
+#         return is_intent_name("MoveIntent")(handler_input)
+
+#     def handle(self, handler_input):
+#         # type: (HandlerInput) -> Response
+#         turns = 5
+#         speech_text = "You tried to move :D. Your turn is " + str(turns)
+#         handler_input.response_builder.speak(speech_text).set_card(
+#             SimpleCard("Hello World", speech_text)).set_should_end_session(
+#             True)
+#         return handler_input.response_builder.response
+
+# Handle the Movement invocation (forward, back, down, up)
+@sb.request_handler(can_handle_func=lambda input:
+                    is_intent_name("MoveIntent")(input))
+def movement_handler(handler_input):
+    """Handler for processing guess with target."""
+    # type: (HandlerInput) -> Response
+    session_attr = handler_input.attributes_manager.session_attributes # session variables
+
+    direction = str(handler_input.request_envelope.request.intent.slots["movement"].value) # value of movement slot
+    movePostion(direction, session_attr) # adjust x or y co-ordinates
+
+    session_attr["number_turns_remaining"] -= 1 #decrease turns remaining 
+    turns_remaining = session_attr["number_turns_remaining"] #value of turns remaining
+
+    speech_text = "You tried to move " + direction + ". You are at position x = " + str(session_attr['player_position_x']) + " and y = " + str(session_attr['player_position_y'])  + ". Your have " + str(turns_remaining) + " turns remaining"
+    reprompt = "Where now?"
+    handler_input.response_builder.speak(speech_text).ask(reprompt)
+    return handler_input.response_builder.response
+
+
+def moveForward(session_attr):
+    session_attr['player_position_x'] +=1
+
+def moveLeft(session_attr):
+    session_attr['player_position_y'] +=1
+
+def moveBack(session_attr):
+   session_attr['player_position_x'] -=1
+
+def moveRight(session_attr):
+    session_attr['player_position_y'] -=1
+
+def movePostion(direction, handler_input):
+    switcher = {
+        "forward": moveForward,
+        "left": moveLeft,
+        "back": moveBack,
+        "right": moveRight
+    }
+    # Get the function from switcher dictionary
+    func = switcher.get(direction, lambda: "nothing")
+    # Execute the function
+    return func(handler_input)
 
 
 @sb.request_handler(can_handle_func=lambda input:
@@ -233,5 +299,6 @@ def log_response(handler_input, response):
     # type: (HandlerInput, Response) -> None
     logger.info("Response: {}".format(response))
 
+# sb.add_request_handler(MoveIntentHandler())
 
 lambda_handler = sb.lambda_handler()
