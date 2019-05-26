@@ -14,11 +14,18 @@ from ask_sdk_model.ui import SimpleCard
 
 from ask_sdk_model import Response
 
-SKILL_NAME = 'High Low Game'
+SKILL_NAME = 'Save Shiraz'
 sb = StandardSkillBuilder(table_name="High-Low-Game", auto_create_table=True)
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+Maze = [
+["0000000","4000000", "0000000", "0000000", "0000000", "0000000", "0000000"],
+["0000000", "3[1101]", "2[0011]", "0[0011]", "1[0011]", "1[0011]", "0000000"],
+["0000000", "0[1100]", "0000000", "0000000", "0000000", "0000000", "0000000"],
+["0000000", "2[1001]", "0[0011]", "1[0011]", "0[0110]", "0000000", "0000000"],
+["0000000", "0000000", "0000000", "0000000", "1[1100]", "0000000", "0000000"]]
 
 
 @sb.request_handler(can_handle_func=is_request_type("LaunchRequest"))
@@ -33,15 +40,15 @@ def launch_request_handler(handler_input):
         attr['ended_session_count'] = 0
         attr['games_played'] = 0
         attr['game_state'] = 'ENDED'
-        attr['player_position_x'] = 0
-        attr['player_position_y'] = 0
+        attr['player_position_x'] = 4
+        attr['player_position_y'] = 1
         attr['number_turns_remaining'] = 8
 
     handler_input.attributes_manager.session_attributes = attr
 
     speech_text = (
-        "Welcome to the crazy maze (insert audio here) "
-        "<audio src='soundbank://soundlibrary/animals/amzn_sfx_bear_groan_roar_01'/>")
+        "Welcome to Saving Shiraz. Use your voice to navigate using the commands: move forward, move back, move right, or move left. Follow your son’s voice and watch out for walls and dead ends. Good luck"
+        "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Into.mp3'/>")
     reprompt = "Say yes to start the game or no to quit."
 
     handler_input.response_builder.speak(speech_text).ask(reprompt)
@@ -165,81 +172,146 @@ def movement_handler(handler_input):
     session_attr = handler_input.attributes_manager.session_attributes # session variables
 
     direction = str(handler_input.request_envelope.request.intent.slots["movement"].value) # value of movement slot
-    movePostion(direction, session_attr) # adjust x or y co-ordinates
+    x = session_attr['player_position_x']
+    y = session_attr['player_position_y']
+
+    if direction == "forward":
+        #-----------FORWARD
+        try:
+            if Maze[-y][x][2]=='1':
+                y+=1
+                if Maze[-y][x][0] == '0':
+                    #No noise
+                    shiraz_noise = ""
+                elif Maze[-y][x][0] == '1': 
+                        # "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Into.mp3'/>"
+                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Quiet+Shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '2': 
+                        #Louder Shiraj
+                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Medium+Shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '3': 
+                        #Loud Shiraj
+                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Loud+shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '4': 
+                    #Game finished
+                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                else:
+                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                session_attr['player_position_y'] +=1
+
+            elif Maze[-y][x][2]=='0':
+                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+            else:
+                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+                #Hit a wall
+        except:
+             shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+    elif direction == "left":
+        #-----------Left
+        try:
+            if Maze[-y][x][4]=='1':
+                x-=1
+                if Maze[-y][x][0] == '0':
+                    #No noise
+                    shiraz_noise = ""
+                elif Maze[-y][x][0] == '1': 
+                    # "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Into.mp3'/>"
+                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Quiet+Shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '2': 
+                    #Louder Shiraj
+                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Medium+Shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '3': 
+                    #Loud Shiraj
+                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Loud+shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '4': 
+                    #Game finished
+                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                else:
+                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                session_attr['player_position_x'] -=1
+            elif Maze[-y][x][2]=='0':
+                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+            else:
+                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+                #Hit a wall
+        except:
+             shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+    elif direction == "back":
+        #-----------Back
+        try:
+            if Maze[-y][x][3]=='1':
+                y-=1
+                if Maze[-y][x][0] == '0':
+                    #No noise
+                    shiraz_noise = ""
+                elif Maze[-y][x][0] == '1': 
+                        # "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Into.mp3'/>"
+                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Quiet+Shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '2': 
+                        #Louder Shiraj
+                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Medium+Shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '3': 
+                        #Loud Shiraj
+                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Loud+shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '4': 
+                    #Game finished
+                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                else:
+                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                session_attr['player_position_y'] -= 1
+            elif Maze[-y][x][2]=='0':
+                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+            else:
+                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+                #Hit a wall
+        except:
+             shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+    elif direction == "right":
+       #-----------Right
+        try:
+            if Maze[-y][x][5]=='1':
+                x+=1
+                if Maze[-y][x][0] == '0':
+                    #No noise
+                    shiraz_noise = ""
+                elif Maze[-y][x][0] == '1': 
+                        # "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Into.mp3'/>"
+                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Quiet+Shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '2': 
+                        #Louder Shiraj
+                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Medium+Shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '3': 
+                        #Loud Shiraj
+                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Loud+shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '4': 
+                    #Game finished
+                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                else:
+                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                session_attr['player_position_x'] += 1
+            elif Maze[-y][x][2]=='0':
+                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+            else:
+                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+                #Hit a wall
+        except:
+             shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+    else:
+        shiraz_noise = "Something aint right chief"
 
     session_attr["number_turns_remaining"] -= 1 #decrease turns remaining 
     turns_remaining = session_attr["number_turns_remaining"] #value of turns remaining
+    footsteps = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/footsteps.mp3'/>"
 
-    speech_text = "You tried to move " + direction + ". You are at position x = " + str(session_attr['player_position_x']) + " and y = " + str(session_attr['player_position_y'])  + ". Your have " + str(turns_remaining) + " turns remaining"
+    speech_text =  footsteps + shiraz_noise
     reprompt = "Where now?"
     handler_input.response_builder.speak(speech_text).ask(reprompt)
     return handler_input.response_builder.response
 
 
-def moveForward(session_attr):
-    session_attr['player_position_x'] +=1
 
-def moveLeft(session_attr):
-    session_attr['player_position_y'] +=1
+def fallback_handler(handler_input):
 
-def moveBack(session_attr):
-   session_attr['player_position_x'] -=1
-
-def moveRight(session_attr):
-    session_attr['player_position_y'] -=1
-
-def movePostion(direction, handler_input):
-    switcher = {
-        "forward": moveForward,
-        "left": moveLeft,
-        "back": moveBack,
-        "right": moveRight
-    }
-    # Get the function from switcher dictionary
-    func = switcher.get(direction, lambda: "nothing")
-    # Execute the function
-    return func(handler_input)
-
-
-@sb.request_handler(can_handle_func=lambda input:
-                    currently_playing(input) and
-                    is_intent_name("NumberGuessIntent")(input))
-def number_guess_handler(handler_input):
-    """Handler for processing guess with target."""
-    # type: (HandlerInput) -> Response
-    session_attr = handler_input.attributes_manager.session_attributes
-    target_num = session_attr["guess_number"]
-    guess_num = int(handler_input.request_envelope.request.intent.slots[
-        "number"].value)
-
-    session_attr["no_of_guesses"] += 1
-
-    if guess_num > target_num:
-        speech_text = (
-            "{} is too high. Try saying a smaller number.".format(guess_num))
-        reprompt = "Try saying a smaller number."
-    elif guess_num < target_num:
-        speech_text = (
-            "{} is too low. Try saying a larger number.".format(guess_num))
-        reprompt = "Try saying a larger number."
-    elif guess_num == target_num:
-        speech_text = (
-            "Congratulations. {} is the correct guess. "
-            "You guessed the number in {} guesses. "
-            "Would you like to play a new game?".format(
-                guess_num, session_attr["no_of_guesses"]))
-        reprompt = "Say yes to start a new game or no to end the game"
-        session_attr["games_played"] += 1
-        session_attr["game_state"] = "ENDED"
-
-        handler_input.attributes_manager.persistent_attributes = session_attr
-        handler_input.attributes_manager.save_persistent_attributes()
-    else:
-        speech_text = "Sorry, I didn't get that. Try saying a number."
-        reprompt = "Try saying a number."
-
-    handler_input.response_builder.speak(speech_text).ask(reprompt)
-    return handler_input.response_builder.response
 
 
 @sb.request_handler(can_handle_func=lambda input:
@@ -299,6 +371,5 @@ def log_response(handler_input, response):
     # type: (HandlerInput, Response) -> None
     logger.info("Response: {}".format(response))
 
-# sb.add_request_handler(MoveIntentHandler())
 
 lambda_handler = sb.lambda_handler()
