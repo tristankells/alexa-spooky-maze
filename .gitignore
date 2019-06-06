@@ -1,11 +1,12 @@
 # Ignore everything
 *
 
-# But not these files...
+# But not these files...to upload new files to the online repo, they must be added here
 !.gitignore
 !lambda_funtion.py
 !requirements.txt
 !README.md
+!player.py
 # etc...
 
 # ...even if they are in subdirectories
