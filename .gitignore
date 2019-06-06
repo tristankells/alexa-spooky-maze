@@ -5,6 +5,7 @@
 !.gitignore
 !lambda_funtion.py
 !requirements.txt
+!README.md
 # etc...
 
 # ...even if they are in subdirectories
