@@ -46,9 +46,7 @@ def launch_request_handler(handler_input):
 
     handler_input.attributes_manager.session_attributes = attr
 
-    speech_text = (
-        "Welcome to Saving Shiraz. Use your voice to navigate using the commands: move forward, move back, move right, or move left. Follow your son’s voice and watch out for walls and dead ends. Good luck"
-        "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Into.mp3'/>")
+    speech_text = ("Welcome to Saving Shiraz. Use your voice to navigate using the commands: move forward, move back, move right, or move left. Follow your son’s voice and watch out for walls and dead ends. Good luck" + (get_audio_element(2)))
     reprompt = "Say yes to start the game or no to quit."
 
     handler_input.response_builder.speak(speech_text).ask(reprompt)
@@ -183,29 +181,23 @@ def movement_handler(handler_input):
                 if Maze[-y][x][0] == '0':
                     #No noise
                     shiraz_noise = ""
-                elif Maze[-y][x][0] == '1': 
-                        # "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Into.mp3'/>"
-                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Quiet+Shiraj.mp3'/>"
-                elif Maze[-y][x][0] == '2': 
-                        #Louder Shiraj
-                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Medium+Shiraj.mp3'/>"
-                elif Maze[-y][x][0] == '3': 
-                        #Loud Shiraj
-                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Loud+shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '1' or Maze[-y][x][0] == '2' or Maze[-y][x][0] == '3': 
+                        #Quiet Shiraj
+                        shiraz_noise = get_audio_element(int(Maze[-y][x][0]))
                 elif Maze[-y][x][0] == '4': 
                     #Game finished
-                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                    shiraz_noise = get_audio_element(6)
                 else:
-                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                    shiraz_noise = get_audio_element(6)
                 session_attr['player_position_y'] +=1
 
             elif Maze[-y][x][2]=='0':
-                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+                shiraz_noise = get_audio_element(5)
             else:
-                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+                shiraz_noise = get_audio_element(5)
                 #Hit a wall
         except:
-             shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+             shiraz_noise = get_audio_element(5)
     elif direction == "left":
         #-----------Left
         try:
@@ -214,28 +206,22 @@ def movement_handler(handler_input):
                 if Maze[-y][x][0] == '0':
                     #No noise
                     shiraz_noise = ""
-                elif Maze[-y][x][0] == '1': 
-                    # "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Into.mp3'/>"
-                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Quiet+Shiraj.mp3'/>"
-                elif Maze[-y][x][0] == '2': 
-                    #Louder Shiraj
-                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Medium+Shiraj.mp3'/>"
-                elif Maze[-y][x][0] == '3': 
-                    #Loud Shiraj
-                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Loud+shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '1' or Maze[-y][x][0] == '2' or Maze[-y][x][0] == '3': 
+                        #Quiet Shiraj
+                        shiraz_noise = get_audio_element(int(Maze[-y][x][0]))
                 elif Maze[-y][x][0] == '4': 
                     #Game finished
-                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                    shiraz_noise = get_audio_element(6)
                 else:
-                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                    shiraz_noise = get_audio_element(6)
                 session_attr['player_position_x'] -=1
             elif Maze[-y][x][2]=='0':
-                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+                shiraz_noise = get_audio_element(5)
             else:
-                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+                shiraz_noise = get_audio_element(5)
                 #Hit a wall
         except:
-             shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+             shiraz_noise = get_audio_element(5)
     elif direction == "back":
         #-----------Back
         try:
@@ -244,28 +230,22 @@ def movement_handler(handler_input):
                 if Maze[-y][x][0] == '0':
                     #No noise
                     shiraz_noise = ""
-                elif Maze[-y][x][0] == '1': 
-                        # "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Into.mp3'/>"
-                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Quiet+Shiraj.mp3'/>"
-                elif Maze[-y][x][0] == '2': 
-                        #Louder Shiraj
-                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Medium+Shiraj.mp3'/>"
-                elif Maze[-y][x][0] == '3': 
-                        #Loud Shiraj
-                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Loud+shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '1' or Maze[-y][x][0] == '2' or Maze[-y][x][0] == '3': 
+                        #Quiet Shiraj
+                        shiraz_noise = get_audio_element(int(Maze[-y][x][0]))
                 elif Maze[-y][x][0] == '4': 
                     #Game finished
-                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                    shiraz_noise = get_audio_element(6)
                 else:
-                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                    shiraz_noise = get_audio_element(6)
                 session_attr['player_position_y'] -= 1
             elif Maze[-y][x][2]=='0':
-                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+                shiraz_noise = get_audio_element(5)
             else:
-                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+                shiraz_noise = get_audio_element(5)
                 #Hit a wall
         except:
-             shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+             shiraz_noise = get_audio_element(5)
     elif direction == "right":
        #-----------Right
         try:
@@ -274,28 +254,22 @@ def movement_handler(handler_input):
                 if Maze[-y][x][0] == '0':
                     #No noise
                     shiraz_noise = ""
-                elif Maze[-y][x][0] == '1': 
-                        # "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Into.mp3'/>"
-                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Quiet+Shiraj.mp3'/>"
-                elif Maze[-y][x][0] == '2': 
-                        #Louder Shiraj
-                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Medium+Shiraj.mp3'/>"
-                elif Maze[-y][x][0] == '3': 
-                        #Loud Shiraj
-                        shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Loud+shiraj.mp3'/>"
+                elif Maze[-y][x][0] == '1' or Maze[-y][x][0] == '2' or Maze[-y][x][0] == '3': 
+                        #Quiet Shiraj
+                        shiraz_noise = get_audio_element(int(Maze[-y][x][0]))
                 elif Maze[-y][x][0] == '4': 
                     #Game finished
-                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                    shiraz_noise = get_audio_element(6)
                 else:
-                    shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Outro.mp3'/>"
+                    shiraz_noise = get_audio_element(6)
                 session_attr['player_position_x'] += 1
             elif Maze[-y][x][2]=='0':
-                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+                shiraz_noise = get_audio_element(5)
             else:
-                shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+                shiraz_noise = get_audio_element(5)
                 #Hit a wall
         except:
-             shiraz_noise = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/Hitting+a+wall.mp3'/>"
+             shiraz_noise = get_audio_element(5)
     else:
         shiraz_noise = "Something aint right chief"
 
@@ -310,7 +284,17 @@ def movement_handler(handler_input):
 
 
 
-def fallback_handler(handler_input):
+def get_audio_element(audio_selection):
+    switcher = {
+       0: "Into", 
+       1: "Quiet+Shiraj",
+       2: "Medium+Shiraj",
+       3: "Loud+shiraj", 
+       4: "Hitting+a+wall",
+       5: "footsteps",
+       6: "Outro"
+    }
+    return ("<audio src='https://s3.amazonaws.com/alexa-alexa-sound/" + switcher.get(audio_selection,) +  ".mp3'/>") 
 
 
 
