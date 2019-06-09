@@ -7,6 +7,10 @@
 !requirements.txt
 !README.md
 !player.py
+!tile.py
+!grid.py
+!game.py
+!row.py
 # etc...
 
 # ...even if they are in subdirectories
