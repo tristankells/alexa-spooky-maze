@@ -6,6 +6,10 @@ class Player:
     def __init__(self, x_coordinate,y_coordinate):
         self.x_coordinate = x_coordinate
         self.y_coordinate = y_coordinate
+        self.coordinates = {
+            'x' : x_coordinate,
+            'y' : y_coordinate
+        }
     
     def move_up(self):
         self.y_coordinate += 1

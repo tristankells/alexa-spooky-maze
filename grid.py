@@ -16,10 +16,10 @@ class Grid:
     ##
     def tile_constructor(self, tile_configuration):
         audio_clip = tile_configuration[0]
-        north_wall = True if (tile_configuration[1] == 1) else False
-        south_wall = True if (tile_configuration[2] == 1) else False
-        west_wall = True if (tile_configuration[3] == 1) else False
-        east_wall = True if (tile_configuration[4] == 1) else False
+        north_wall = True if (tile_configuration[1] == 0) else False
+        south_wall = True if (tile_configuration[2] == 0) else False
+        west_wall = True if (tile_configuration[3] == 0) else False
+        east_wall = True if (tile_configuration[4] == 0) else False
 
         return Tile(north_wall, south_wall,  west_wall, east_wall, audio_clip)
 
@@ -43,14 +43,24 @@ class Grid:
     def print_grid(self):
         for row in self.grid:
             self.print_row(row)
+    
+    def get_tile(self, x_coordinate, y_coordinate):
+        return self.grid[-y_coordinate][x_coordinate-1]
 
-    def test_tile(self, x_coordinates, y_coordinates):
-        adjusted_x = x_coordinates
-        adjusted_y = y_coordinates
-        hit_a_wall = False
-        tested_room = self.grid[adjusted_y][adjusted_x]
-        if(tested_tile.):
-            r
+    
+    def can_move(self, x_coordinate, y_coordinate, direction):
+        if(direction == 'up'):  return self.get_tile(x_coordinate, y_coordinate + 1).south_wall 
+        elif(direction == 'down'): return self.get_tile(x_coordinate, y_coordinate - 1).north_wall 
+        elif(direction == 'left'): return self.get_tile(x_coordinate, y_coordinate - 1).east_wall 
+        elif(direction == 'right'): return self.get_tile(x_coordinate, y_coordinate - 1).west_wall
+        else:
+            return  
+        
+    
+    
+
+        
+            
         
 
 
