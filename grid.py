@@ -5,11 +5,15 @@ from tile import Tile
 
 class Grid:
 
+    ##
+    ##Grid contructor
+    ##
     def __init__(self, grid_configuration):
         self.grid = self.grid_constructor(grid_configuration)
-        
- 
 
+    ##
+    ## Takes a list in the form ['quiet noise', 1, 1, 0 , 1] for example and constructs a tile.
+    ##
     def tile_constructor(self, tile_configuration):
         audio_clip = tile_configuration[0]
         north_wall = True if (tile_configuration[1] == 1) else False
@@ -17,7 +21,7 @@ class Grid:
         west_wall = True if (tile_configuration[3] == 1) else False
         east_wall = True if (tile_configuration[4] == 1) else False
 
-        return Tile(north_wall, east_wall, south_wall , west_wall, audio_clip)
+        return Tile(north_wall, south_wall,  west_wall, east_wall, audio_clip)
 
     def row_constructor(self, row_configuration):
         grid_row = []
@@ -33,40 +37,40 @@ class Grid:
     
     def print_row(self, row):
         for tile in row:
-            print(tile.print_tile())
+            tile.print_tile()
+        print(' ')
 
     def print_grid(self):
         for row in self.grid:
-            print(self.print_row(row))
+            self.print_row(row)
+
+    def test_tile(self, x_coordinates, y_coordinates):
+        adjusted_x = x_coordinates
+        adjusted_y = y_coordinates
+        hit_a_wall = False
+        tested_room = self.grid[adjusted_y][adjusted_x]
+        if(tested_tile.):
+            r
+        
 
 
 
 
 
         
-Maze = [
-[['',0,0,0,0],['',0,0,0,0], ['',0,0,0,0],['',0,0,0,0], ['',0,0,0,0], ['',0,0,0,0],['',0,0,0,0]],
-[['',0,0,0,0],['',1,1,0,1], ['',1,1,0,0],['',1,1,0,0], ['',0,0,0,0], ['',1,1,0,0], ['',0,0,0,0]],
-[['',0,0,0,0],['',1,1,0,0], ['',1,1,0,0],['',1,1,0,0], ['',0,0,0,0], ['',0,0,0,0], ['',0,0,0,0]],
-[['',0,0,0,0],['',1,1,0,0], ['',1,1,0,0],['',1,1,0,0], ['',0,0,0,0], ['',0,0,0,0], ['',0,0,0,0]],
-[['',0,0,0,0],['',1,1,0,0], ['',1,1,0,0],['',1,1,0,0], ['',0,0,0,0], ['',0,0,0,0], ['',0,0,0,0]]] 
-
-#Test a Creating a Room
-G1 = Grid(grid_configuration = Maze)
-G1.print_grid()
-
-
 # Maze = [
-# ["0000000","4000000", "0000000", "0000000", "0000000", "0000000", "0000000"],
-# ["0000000", "3[1101]", "2[0011]", "0[0011]", "1[0011]", "1[0011]", "0000000"],
-# ["0000000", "0[1100]", "0000000", "0000000", "0000000", "0000000", "0000000"],
-# ["0000000", "2[1001]", "0[0011]", "1[0011]", "0[0110]", "0000000", "0000000"],
-# ["0000000", "0000000", "0000000", "0000000", "1[1100]", "0000000", "0000000"]]
+# [['',0,0,0,0],['',0,0,0,0], ['',0,0,0,0],['',0,0,0,0], ['',0,0,0,0], ['',0,0,0,0],['',0,0,0,0]],
+# [['',0,0,0,0],['',1,1,0,1], ['',1,1,0,0],['',1,1,0,0], ['',0,0,0,0], ['',1,1,0,0], ['',0,0,0,0]],
+# [['',0,0,0,0],['',1,1,0,0], ['',1,1,0,0],['',1,1,0,0], ['',0,0,0,0], ['',0,0,0,0], ['',0,0,0,0]],
+# [['',0,0,0,0],['',1,1,0,0], ['',1,1,0,0],['',1,1,0,0], ['',0,0,0,0], ['',0,0,0,0], ['',0,0,0,0]],
+# [['',0,0,0,0],['',1,1,0,0], ['',1,1,0,0],['',1,1,0,0], ['',0,0,0,0], ['',0,0,0,0], ['',0,0,0,0]]] 
 
-# Maze = [
-# ["0000000","4000000", "0000000", "0000000", "0000000", "0000000", "0000000"],
-# ["0000000", "3[1101]", "2[0011]", "0[0011]", "1[0011]", "1[0011]", "0000000"],
-# ["0000000", "0[1100]", "0000000", "0000000", "0000000", "0000000", "0000000"],
-# ["0000000", "2[1001]", "0[0011]", "1[0011]", "0[0110]", "0000000", "0000000"],
-# ["0000000", "0000000", "0000000", "0000000", "1[1100]", "0000000", "0000000"]]
+# #Test a Creating a Room
+# G1 = Grid(grid_configuration = Maze)
+# G1.print_grid()
+
+
+# 
+# Oringinal maze li 
+#
 
