@@ -11,6 +11,7 @@ from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
 from ask_sdk_model.ui import SimpleCard
+from game import Game
 
 from ask_sdk_model import Response
 
@@ -20,13 +21,6 @@ sb = StandardSkillBuilder(table_name="High-Low-Game", auto_create_table=True)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-Maze = [
-["0000000","4000000", "0000000", "0000000", "0000000", "0000000", "0000000"],
-["0000000", "3[1101]", "2[0011]", "0[0011]", "1[0011]", "1[0011]", "0000000"],
-["0000000", "0[1100]", "0000000", "0000000", "0000000", "0000000", "0000000"],
-["0000000", "2[1001]", "0[0011]", "1[0011]", "0[0110]", "0000000", "0000000"],
-["0000000", "0000000", "0000000", "0000000", "1[1100]", "0000000", "0000000"]]
-
 
 @sb.request_handler(can_handle_func=is_request_type("LaunchRequest"))
 def launch_request_handler(handler_input):
@@ -35,16 +29,20 @@ def launch_request_handler(handler_input):
     Get the persistence attributes, to figure out the game state.
     """
     # type: (HandlerInput) -> Response
-    attr = handler_input.attributes_manager.persistent_attributes
-    if not attr:
-        attr['ended_session_count'] = 0
-        attr['games_played'] = 0
-        attr['game_state'] = 'ENDED'
-        attr['player_position_x'] = 4
-        attr['player_position_y'] = 1
-        attr['number_turns_remaining'] = 8
+    state_variables = handler_input.attributes_manager.persistent_attributes
+    if not state_variables:
+        state_variables['ended_session_count'] = 0
+        state_variables['games_played'] = 0
+        state_variables['game_state'] = 'ENDED'
+        state_variables['game_variables'] = {
+            'coordinates' : {
+                'x' : 5,
+                'y' : 1
+            }
+        }
+        state_variables['number_turns_remaining'] = 8
 
-    handler_input.attributes_manager.session_attributes = attr
+    handler_input.attributes_manager.session_attributes = state_variables
 
     speech_text = ("Welcome to Saving Shiraz. Use your voice to navigate using the commands: move forward, move back, move right, or move left. Follow your son’s voice and watch out for walls and dead ends. Good luck" + (get_audio_element(2)))
     reprompt = "Say yes to start the game or no to quit."
@@ -146,140 +144,26 @@ def no_handler(handler_input):
 
 
 
-# class MoveIntentHandler(AbstractRequestHandler):
-#     """Handler for Movement Intent."""
-#     def can_handle(self, handler_input):
-#         # type: (HandlerInput) -> bool
-#         return is_intent_name("MoveIntent")(handler_input)
 
-#     def handle(self, handler_input):
-#         # type: (HandlerInput) -> Response
-#         turns = 5
-#         speech_text = "You tried to move :D. Your turn is " + str(turns)
-#         handler_input.response_builder.speak(speech_text).set_card(
-#             SimpleCard("Hello World", speech_text)).set_should_end_session(
-#             True)
-#         return handler_input.response_builder.response
-
-# Handle the Movement invocation (forward, back, down, up)
 @sb.request_handler(can_handle_func=lambda input:
                     is_intent_name("MoveIntent")(input))
 def movement_handler(handler_input):
     """Handler for processing guess with target."""
     # type: (HandlerInput) -> Response
-    session_attr = handler_input.attributes_manager.session_attributes # session variables
+    game_variables = handler_input.attributes_manager.session_attributes['game_variables'] # session variables
 
     direction = str(handler_input.request_envelope.request.intent.slots["movement"].value) # value of movement slot
-    x = session_attr['player_position_x']
-    y = session_attr['player_position_y']
 
-    if direction == "forward":
-        #-----------FORWARD
-        try:
-            if Maze[-y][x][2]=='1':
-                y+=1
-                if Maze[-y][x][0] == '0':
-                    #No noise
-                    shiraz_noise = ""
-                elif Maze[-y][x][0] == '1' or Maze[-y][x][0] == '2' or Maze[-y][x][0] == '3': 
-                        #Quiet Shiraj
-                        shiraz_noise = get_audio_element(int(Maze[-y][x][0]))
-                elif Maze[-y][x][0] == '4': 
-                    #Game finished
-                    shiraz_noise = get_audio_element(6)
-                else:
-                    shiraz_noise = get_audio_element(6)
-                session_attr['player_position_y'] +=1
+    game = Game(game_variables["coordinates"])
 
-            elif Maze[-y][x][2]=='0':
-                shiraz_noise = get_audio_element(5)
-            else:
-                shiraz_noise = get_audio_element(5)
-                #Hit a wall
-        except:
-             shiraz_noise = get_audio_element(5)
-    elif direction == "left":
-        #-----------Left
-        try:
-            if Maze[-y][x][4]=='1':
-                x-=1
-                if Maze[-y][x][0] == '0':
-                    #No noise
-                    shiraz_noise = ""
-                elif Maze[-y][x][0] == '1' or Maze[-y][x][0] == '2' or Maze[-y][x][0] == '3': 
-                        #Quiet Shiraj
-                        shiraz_noise = get_audio_element(int(Maze[-y][x][0]))
-                elif Maze[-y][x][0] == '4': 
-                    #Game finished
-                    shiraz_noise = get_audio_element(6)
-                else:
-                    shiraz_noise = get_audio_element(6)
-                session_attr['player_position_x'] -=1
-            elif Maze[-y][x][2]=='0':
-                shiraz_noise = get_audio_element(5)
-            else:
-                shiraz_noise = get_audio_element(5)
-                #Hit a wall
-        except:
-             shiraz_noise = get_audio_element(5)
-    elif direction == "back":
-        #-----------Back
-        try:
-            if Maze[-y][x][3]=='1':
-                y-=1
-                if Maze[-y][x][0] == '0':
-                    #No noise
-                    shiraz_noise = ""
-                elif Maze[-y][x][0] == '1' or Maze[-y][x][0] == '2' or Maze[-y][x][0] == '3': 
-                        #Quiet Shiraj
-                        shiraz_noise = get_audio_element(int(Maze[-y][x][0]))
-                elif Maze[-y][x][0] == '4': 
-                    #Game finished
-                    shiraz_noise = get_audio_element(6)
-                else:
-                    shiraz_noise = get_audio_element(6)
-                session_attr['player_position_y'] -= 1
-            elif Maze[-y][x][2]=='0':
-                shiraz_noise = get_audio_element(5)
-            else:
-                shiraz_noise = get_audio_element(5)
-                #Hit a wall
-        except:
-             shiraz_noise = get_audio_element(5)
-    elif direction == "right":
-       #-----------Right
-        try:
-            if Maze[-y][x][5]=='1':
-                x+=1
-                if Maze[-y][x][0] == '0':
-                    #No noise
-                    shiraz_noise = ""
-                elif Maze[-y][x][0] == '1' or Maze[-y][x][0] == '2' or Maze[-y][x][0] == '3': 
-                        #Quiet Shiraj
-                        shiraz_noise = get_audio_element(int(Maze[-y][x][0]))
-                elif Maze[-y][x][0] == '4': 
-                    #Game finished
-                    shiraz_noise = get_audio_element(6)
-                else:
-                    shiraz_noise = get_audio_element(6)
-                session_attr['player_position_x'] += 1
-            elif Maze[-y][x][2]=='0':
-                shiraz_noise = get_audio_element(5)
-            else:
-                shiraz_noise = get_audio_element(5)
-                #Hit a wall
-        except:
-             shiraz_noise = get_audio_element(5)
-    else:
-        shiraz_noise = "Something aint right chief"
+    game_response = game.handle_move_input(direction)()
 
-    session_attr["number_turns_remaining"] -= 1 #decrease turns remaining 
-    turns_remaining = session_attr["number_turns_remaining"] #value of turns remaining
-    footsteps = "<audio src='https://s3.amazonaws.com/alexa-alexa-sound/footsteps.mp3'/>"
+    ## Save game variable to state variables
+    handler_input.attributes_manager.session_attributes['game_variables'] = game.get_game_variables()
 
-    speech_text =  footsteps + shiraz_noise
     reprompt = "Where now?"
-    handler_input.response_builder.speak(speech_text).ask(reprompt)
+    
+    handler_input.response_builder.speak(game_response).ask(reprompt)
     return handler_input.response_builder.response
 
 
@@ -308,10 +192,10 @@ def fallback_handler(handler_input):
     so it is safe to deploy on any locale.
     """
     # type: (HandlerInput) -> Response
-    session_attr = handler_input.attributes_manager.session_attributes
+    game_variables = handler_input.attributes_manager.session_attributes
 
-    if ("game_state" in session_attr and
-            session_attr["game_state"]=="STARTED"):
+    if ("game_state" in game_variables and
+            game_variables["game_state"]=="STARTED"):
         speech_text = (
             "The {} skill can't help you with that.  "
             "Try guessing a number between 0 and 100. ".format(SKILL_NAME))

@@ -12,6 +12,7 @@
 !game.py
 !row.py
 !alexa_state_tester.py
+!audio.py
 # etc...
 
 # ...even if they are in subdirectories

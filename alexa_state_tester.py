@@ -8,7 +8,7 @@ from game import Game
   
 state_variables = {
     'coordinates' : {
-        'x' : 4,
+        'x' : 5,
         'y' : 1
     }
 }
