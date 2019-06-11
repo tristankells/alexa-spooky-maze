@@ -3,13 +3,10 @@
 ##
 class Player:
     ##Player constructor. Take x and y coordinates for the maze
-    def __init__(self, x_coordinate,y_coordinate):
-        self.x_coordinate = x_coordinate
-        self.y_coordinate = y_coordinate
-        self.coordinates = {
-            'x' : x_coordinate,
-            'y' : y_coordinate
-        }
+    def __init__(self,coordinates):
+        self.x_coordinate = coordinates['x']
+        self.y_coordinate = coordinates['y']
+
     
     def move_up(self):
         self.y_coordinate += 1
@@ -27,15 +24,15 @@ class Player:
     def get_coordinates(self):
         print('My current position is X = ' + str(self.x_coordinate) + ' AND Y = ' +  str(self.y_coordinate))
 
-##
-## Class Test
-##
-p1 = Player(0,0)
-p1.move_up()
-p1.get_coordinates()
-p1.move_down()
-p1.get_coordinates()
-p1.move_left()
-p1.get_coordinates()
-p1.move_right()
-p1.get_coordinates()
+# ##
+# ## Class Test
+# ##
+# p1 = Player({'x' : 4, 'y' : 1})
+# p1.move_up()
+# p1.get_coordinates()
+# p1.move_down()
+# p1.get_coordinates()
+# p1.move_left()
+# p1.get_coordinates()
+# p1.move_right()
+# p1.get_coordinates()

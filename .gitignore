@@ -11,6 +11,7 @@
 !grid.py
 !game.py
 !row.py
+!alexa_state_tester.py
 # etc...
 
 # ...even if they are in subdirectories
