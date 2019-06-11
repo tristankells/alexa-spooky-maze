@@ -15,7 +15,7 @@ class Tile:
         print("Audio : " + self.audio_clip + " Walls : " + self.wall_to_int(self.north_wall) + self.wall_to_int(self.south_wall) + self.wall_to_int(self.west_wall) + self.wall_to_int(self.east_wall), end=" ")
     
     def wall_to_int(self, wall) :
-        return '1' if wall else '0'
+        return '0' if wall else '1'
     
         
            

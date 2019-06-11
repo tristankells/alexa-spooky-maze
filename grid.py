@@ -49,10 +49,10 @@ class Grid:
 
     
     def can_move(self, x_coordinate, y_coordinate, direction):
-        if(direction == 'up'):  return self.get_tile(x_coordinate, y_coordinate + 1).south_wall 
-        elif(direction == 'down'): return self.get_tile(x_coordinate, y_coordinate - 1).north_wall 
-        elif(direction == 'left'): return self.get_tile(x_coordinate, y_coordinate - 1).east_wall 
-        elif(direction == 'right'): return self.get_tile(x_coordinate, y_coordinate - 1).west_wall
+        if(direction == 'up'):  return not self.get_tile(x_coordinate, y_coordinate + 1).south_wall
+        elif(direction == 'down'): return not self.get_tile(x_coordinate, y_coordinate - 1).north_wall 
+        elif(direction == 'left'): return not self.get_tile(x_coordinate - 1, y_coordinate).east_wall 
+        elif(direction == 'right'): return not self.get_tile(x_coordinate + 1, y_coordinate - 1).west_wall
         else:
             return  
         

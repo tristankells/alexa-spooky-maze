@@ -8,13 +8,15 @@ class Game:
 
     def __init__(self):
         Maze = [
-            [['1',0,0,0,0],['2',0,0,0,0], ['3',0,0,0,0],['4',0,0,0,0], ['5',0,0,0,0], ['6',0,0,0,0],['7',0,0,0,0]],
+            [['1',0,0,0,0],['Game End',0,1,0,0], ['3',0,0,0,0],['4',0,0,0,0], ['5',0,0,0,0], ['6',0,0,0,0],['7',0,0,0,0]],
             [['8',0,0,0,0],['9',1,1,0,1], ['10',0,0,1,1],['11',0,0,1,1], ['12',0,0,1,1], ['13',0,0,1,1], ['14',0,0,0,0]],
             [['15',0,0,0,0],['16',1,1,0,0], ['17',0,0,0,0],['18',0,0,0,0], ['19',0,0,0,0], ['20',0,0,0,0], ['21',0,0,0,0]],
             [['22',0,0,0,0],['23',1,0,0,1], ['24',0,0,1,1],['25',0,1,1,0], ['26',0,1,1,0], ['27',0,0,0,0], ['28',0,0,0,0]],
-            [['29',0,0,0,0],['30',0,0,0,0], ['31',0,0,0,0],['32',1,1,0,0], ['33',0,0,0,0], ['34',0,0,0,0], ['35',0,0,0,0]]] 
+            [['29',0,0,0,0],['30',0,0,0,0], ['31',0,0,0,0],['Game Beginning',1,1,0,0], ['33',0,0,0,0], ['34',0,0,0,0], ['35',0,0,0,0]]] 
+        Room = []
         self.player = Player(4,1)
         self.maze = Grid(grid_configuration = Maze)
+        self.room = Grid(grid_configuration = Maze)
 
     def move_up(self):
         print("You tried to move up")
@@ -51,12 +53,15 @@ class Game:
         
 
     def handle_input(self, user_input):
+        user_input = user_input.lower()
         command_dictionary = {
             'move up' : self.move_up,
             'move down' : self.move_down,
             'move left' : self.move_left,
             'move right': self.move_right
         }
+        if user_input not in command_dictionary :
+            return lambda : print("Command not recognised. Try again")
         return command_dictionary[user_input]
 
     def test_player_status(self):
@@ -69,6 +74,7 @@ class Game:
         
 game_active = True
 game = Game()
+game.maze.print_grid()
 
 while(game_active):
     user_input = input()
