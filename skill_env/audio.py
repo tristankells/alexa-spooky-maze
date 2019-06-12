@@ -1,4 +1,4 @@
-def get_audio_element(audio_selection):
+def Audio(audio_selection):
     switcher = {
        'intro': "Into", 
        'quiet shiraz': "Quiet+Shiraj",
