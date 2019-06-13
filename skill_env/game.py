@@ -23,16 +23,15 @@ class Game:
     
 
     def move_up(self):
-        # print("You tried to move up")
-        # if(self.maze.can_move(self.player.x_coordinate, self.player.y_coordinate, 'up')) :
-        #     print("You moved up")
-        #     self.player.move_up()
-        #     self.print_player_status()
-        #     return Audio('footsteps')
-        # else:
-        #     print("You failed")
-        #     return Audio('hiting a wall')
-        return 'This function works'
+        print("You tried to move up")
+        if(self.maze.can_move(self.player.x_coordinate, self.player.y_coordinate, 'up')) :
+            print("You moved up")
+            self.player.move_up()
+            self.print_player_status()
+            return Audio('footsteps')
+        else:
+            print("You failed")
+            return Audio('hiting a wall')
 
     def move_down(self):
         print("You tried to move down")

@@ -3,7 +3,7 @@
 
 # But not these files...to upload new files to the online repo, they must be added here
 !.gitignore
-!lambda_funtion.py
+!lambda_function.py
 !requirements.txt
 !README.md
 !player.py
