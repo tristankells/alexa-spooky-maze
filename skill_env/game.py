@@ -20,7 +20,11 @@ class Game:
         self.maze = Grid(grid_configuration = Maze)
         self.puzzle_room = Grid(grid_configuration = Puzzle_Room)
 
-    
+    def get_taking_a_step_string(self):
+        return 'Moved' + Audio('footsteps')
+
+    def get_hitting_a_wall_string(self):
+        return'Hit a wall' + Audio('hiting a wall')
 
     def move_up(self):
         print("You tried to move up")
@@ -28,10 +32,10 @@ class Game:
             print("You moved up")
             self.player.move_up()
             self.print_player_status()
-            return Audio('footsteps')
+            return self.get_taking_a_step_string()
         else:
-            print("You failed")
-            return Audio('hiting a wall')
+            
+            return self.get_hitting_a_wall_string()
 
     def move_down(self):
         print("You tried to move down")
@@ -39,10 +43,10 @@ class Game:
             print("You moved down")
             self.player.move_down()
             self.print_player_status()
-            return Audio('footsteps')
+            return self.get_taking_a_step_string()
         else:
-            print("You failed")
-            return Audio('hiting a wall')
+            
+            return self.get_hitting_a_wall_string()
 
     def move_left(self):
         print("You tried to move left")
@@ -50,10 +54,10 @@ class Game:
             print("You moved left")
             self.player.move_left()
             self.print_player_status()
-            return Audio('footsteps')
+            return self.get_taking_a_step_string()
         else:
-            print("You failed")
-            return Audio('hiting a wall')
+            
+            return self.get_hitting_a_wall_string()
         
 
     def move_right(self):
@@ -62,10 +66,10 @@ class Game:
             print("You moved right")
             self.player.move_right()
             self.print_player_status()
-            return Audio('footsteps')
+            return self.get_taking_a_step_string()
         else:
-            print("You failed")
-            return Audio('hiting a wall')
+            
+            return self.get_hitting_a_wall_string()
         
 
     def handle_move_input(self, user_input):
@@ -78,7 +82,7 @@ class Game:
         }
         if user_input not in command_dictionary :
             return lambda : print("Command not recognised. Try again")
-        return command_dictionary[user_input]
+        return  command_dictionary[user_input] if not (self.player.x_coordinate == 2 and self.player.y_coordinate == 5) else self.game_outro
 
     def print_player_status(self):
         print("You position is now X = " + str(self.player.x_coordinate) + " Y = " + str(self.player.y_coordinate))
@@ -93,10 +97,14 @@ class Game:
     def game_intro(self):
         return speech_text_library('intro')
 
+    def game_outro(self):
+        return speech_text_library('outro')
+
     
 def speech_text_library(selection) :
     library = {
-        'intro' : "Welcome to Saving Shiraz Beta" + Audio('intro')
+        'intro' : "Welcome to Saving Shiraz Beta" + Audio('intro'),
+        'outro' :  Audio('outro')
     }
     return library[selection]
 

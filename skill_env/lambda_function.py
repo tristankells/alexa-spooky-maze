@@ -158,41 +158,27 @@ def no_handler(handler_input):
 def movement_handler(handler_input):
     """Handler for processing guess with target."""
     # type: (HandlerInput) -> Response
-    ##Works
-    direction = str(handler_input.request_envelope.request.intent.slots["movement"].value) # value of movement slot
 
     global global_game
 
-    # try :
-##Works
+    direction = str(handler_input.request_envelope.request.intent.slots["movement"].value) # value of movement slot
     session_attr = handler_input.attributes_manager.session_attributes # session variables
+
     x = session_attr['x']
     y = session_attr['y']
-##Works
+
     global_game.player.set_coordinates({
         'x' : x,
         'y' : y
     })
-
-   
-##Works
+    
     game_response = global_game.handle_move_input(direction)()
-
-    # #     handler_input.attributes_manager.session_attributes = state_variables
-
-    # # except :
-        
-
-    # #     state_variables
-
-    # #     ## THROWS EXCEPTION
-    # #     handler_input.attributes_manager.session_attributes['game_variables'] = game.get_game_variables()
     game_variables = global_game.get_game_variables()
+
     session_attr['x'] = game_variables['coordinates']['x']
     session_attr['y'] = game_variables['coordinates']['y']
+
     handler_input.attributes_manager.session_attributes = session_attr
-   
-    # game_response = 'Its FUcked ' + direction 
     reprompt = "Where now?"
     handler_input.response_builder.speak(game_response).ask(reprompt)
 
