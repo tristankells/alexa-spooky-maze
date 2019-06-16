@@ -5,85 +5,68 @@ from grid import Grid
 from player import Player
 from audio import Audio
 
+
+
+
+
 class Game:
 
     def __init__(self, state_variables):
+        # Maze = [
+        #     [{"code" : 'wall'}, {"code" : 'outr'},{"code" : 'wall'}, {"code" : 'wall'}, {"code" : 'wall'},{"code" : 'wall'}, {"code" : 'wall'}],
+        #     [{"code" : 'wall'}, {"code" : 'foot'},{"code" : 'wall'}, {"code" : 'wall'}, {"code" : 'wall'},{"code" : 'wall'}, {"code" : 'wall'}],
+        #     [{"code" : 'wall'}, {"code" : 'foot'},{"code" : 'wall'}, {"code" : 'wall'}, {"code" : 'wall'},{"code" : 'wall'}, {"code" : 'wall'}],
+        #     [{"code" : 'wall'}, {"code" : 'foot'},{"code" : 'foot'}, {"code" : 'foot'}, {"code" : 'foot'},{"code" : 'wall'}, {"code" : 'wall'}],
+        #     [{"code" : 'wall'}, {"code" : 'wall'},{"code" : 'wall'}, {"code" : 'wall'}, {"code" : 'into'},{"code" : 'wall'}, {"code" : 'wall'}]]
+
         Maze = [
-            [['1',0,0,0,0],['Game End',0,1,0,0], ['3',0,0,0,0],['4',0,0,0,0], ['5',0,0,0,0], ['6',0,0,0,0],['7',0,0,0,0]],
-            [['8',0,0,0,0],['9',1,1,0,1], ['10',0,0,1,1],['11',0,0,1,1], ['12',0,0,1,1], ['13',0,0,1,1], ['14',0,0,0,0]],
-            [['15',0,0,0,0],['16',1,1,0,0], ['17',0,0,0,0],['18',0,0,0,0], ['19',0,0,0,0], ['20',0,0,0,0], ['21',0,0,0,0]],
-            [['22',0,0,0,0],['23',1,0,0,1], ['24',0,0,1,1],['25',0,0,1,1], ['26',0,1,1,0], ['27',0,0,0,0], ['28',0,0,0,0]],
-            [['29',0,0,0,0],['30',0,0,0,0], ['31',0,0,0,0],['32',0,0,0,0], ['Game Beginning',1,0,0,0], ['34',0,0,0,0], ['35',0,0,0,0]]]
-        Puzzle_Room = []
+           ['wall', 'end', 'wall', 'wall', 'star', 'wall', 'wall'],
+           ['wall', 'foot', 'loud', 'meds', 'foot', 'meds', 'wall'],
+           ['wall', 'loud', 'wall', 'wall', 'wall', 'wall', 'wall'],
+           ['wall', 'meds', 'foot', 'quis', 'quis', 'wall', 'wall'],
+           ['wall', 'wall', 'wall', 'wall', 'star', 'wall', 'wall']]
+
+        Puzzle_Room = [
+            ['wall', 'end', 'wall', 'wall', 'star', 'wall', 'wall'],
+           ['wall', 'foot', 'loud', 'meds', 'foot', 'meds', 'wall'],
+           ['wall', 'loud', 'wall', 'wall', 'wall', 'wall', 'wall'],
+           ['wall', 'meds', 'foot', 'quis', 'quis', 'wall', 'wall'],
+           ['wall', 'wall', 'wall', 'wall', 'star', 'wall', 'wall']
+        ]
+       
          
         self.player = Player(state_variables['coordinates'])
         self.maze = Grid(grid_configuration = Maze)
         self.puzzle_room = Grid(grid_configuration = Puzzle_Room)
 
-    def get_taking_a_step_string(self):
-        return 'Moved' + Audio('footsteps')
-
-    def get_hitting_a_wall_string(self):
-        return'Hit a wall' + Audio('hiting a wall')
-
-    def move_up(self):
-        print("You tried to move up")
-        if(self.maze.can_move(self.player.x_coordinate, self.player.y_coordinate, 'up')) :
-            print("You moved up")
-            self.player.move_up()
-            self.print_player_status()
-            return self.get_taking_a_step_string()
-        else:
-            
-            return self.get_hitting_a_wall_string()
-
-    def move_down(self):
-        print("You tried to move down")
-        if(self.maze.can_move(self.player.x_coordinate, self.player.y_coordinate, 'down')):
-            print("You moved down")
-            self.player.move_down()
-            self.print_player_status()
-            return self.get_taking_a_step_string()
-        else:
-            
-            return self.get_hitting_a_wall_string()
-
-    def move_left(self):
-        print("You tried to move left")
-        if(self.maze.can_move(self.player.x_coordinate, self.player.y_coordinate, 'left')):
-            print("You moved left")
-            self.player.move_left()
-            self.print_player_status()
-            return self.get_taking_a_step_string()
-        else:
-            
-            return self.get_hitting_a_wall_string()
+    def move(self, movement) :
+        new_room_code = self.maze.get_new_room_code(self.player.x_coordinate, self.player.y_coordinate, movement)
         
+        if(new_room_code != 'wall') :
+            self.player.move(movement)
 
-    def move_right(self):
-        print("You tried to move right")
-        if(self.maze.can_move(self.player.x_coordinate, self.player.y_coordinate, 'right')):
-            print("You moved right")
-            self.player.move_right()
-            self.print_player_status()
-            return self.get_taking_a_step_string()
-        else:
-            
-            return self.get_hitting_a_wall_string()
+        return new_room_code
+        
         
 
     def handle_move_input(self, user_input):
+        response_audio = ""
+        room_code = ""
         user_input = user_input.lower()
         command_dictionary = {
-            'forward' : self.move_up,
-            'back' : self.move_down,
-            'left' : self.move_left,
-            'right': self.move_right
+            'forward' : self.move('north'),
+            'back' : self.move('south'),
+            'left' : self.move('west'),
+            'right': self.move('east')
         }
-        if user_input not in command_dictionary :
-            return lambda : print("Command not recognised. Try again")
-        return  command_dictionary[user_input] if not (self.player.x_coordinate == 2 and self.player.y_coordinate == 5) else self.game_outro
+        
+        room_code = command_dictionary[user_input]
 
+        response_audio = speech_text_library(room_code)
+
+        return response_audio
+
+        
     def print_player_status(self):
         print("You position is now X = " + str(self.player.x_coordinate) + " Y = " + str(self.player.y_coordinate))
         print("Room Audio: " + self.maze.get_tile(self.player.x_coordinate,self.player.y_coordinate).audio_clip)
@@ -94,30 +77,15 @@ class Game:
             'y': self.player.y_coordinate
         }}
     
-    def game_intro(self):
-        return speech_text_library('intro')
-
-    def game_outro(self):
-        return speech_text_library('outro')
 
     
 def speech_text_library(selection) :
     library = {
-        'intro' : "Welcome to Saving Shiraz Beta" + Audio('intro'),
-        'outro' :  Audio('outro')
+        'into' : "Welcome to Saving Shiraz Beta" + Audio('intro'),
+        'exit' : Audio('outro'),
+        'quie' : Audio('footsteps') + Audio('quiet shiraz'),
+        'medi' : Audio('footsteps') + Audio('medium shiraz'),
+        'loud' : Audio('footsteps') + Audio('loud shiraz'),
+        'wall' : Audio('wall')
     }
     return library[selection]
-
-# Maze = [
-# ["0000000","4000000", "0000000", "0000000", "0000000", "0000000", "0000000"],
-# ["0000000", "3[1101]", "2[0011]", "0[0011]", "1[0011]", "1[0011]", "0000000"],
-# ["0000000", "0[1100]", "0000000", "0000000", "0000000", "0000000", "0000000"],
-# ["0000000", "2[1001]", "0[0011]", "1[0011]", "0[0110]", "0000000", "0000000"],
-# ["0000000", "0000000", "0000000", "0000000", "1[1100]", "0000000", "0000000"]]
-    
-game = Game({'coordinates' : {
-    'x' : 1,
-    'y' : 1
-}})
-print(game.move_right())
-        

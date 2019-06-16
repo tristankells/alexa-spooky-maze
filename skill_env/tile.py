@@ -3,16 +3,12 @@
 ##
 class Tile:
     ##Player constructor. Take x and y coordinates for the maze
-    def __init__(self, north_wall , south_wall, west_wall, east_wall, audio_clip):
-        self.north_wall = north_wall
-        self.south_wall = south_wall
-        self.west_wall = west_wall
-        self.east_wall = east_wall
+    def __init__(self, audio_clip):
         self.audio_clip = audio_clip
         
         ##For tests
     def print_tile(self):
-        print("Audio : " + self.audio_clip + " Walls : " + self.wall_to_int(self.north_wall) + self.wall_to_int(self.south_wall) + self.wall_to_int(self.west_wall) + self.wall_to_int(self.east_wall), end=" ")
+        print("Audio : " + self.audio_clip + "Walls ")
     
     def wall_to_int(self, wall) :
         return '0' if wall else '1'

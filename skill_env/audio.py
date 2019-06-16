@@ -4,7 +4,7 @@ def Audio(audio_selection):
        'quiet shiraz': "Quiet+Shiraj",
        'medium shiraz': "Medium+Shiraj",
        'loud shiraz': "Loud+shiraj", 
-       'hiting a wall': "Hitting+a+wall",
+       'wall': "Hitting+a+wall",
        'footsteps': "footsteps",
        'outro': "Outro"
     }

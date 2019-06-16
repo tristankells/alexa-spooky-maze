@@ -11,19 +11,28 @@ class Player:
         self.x_coordinate = coordinates['x']
         self.y_coordinate = coordinates['y']
 
+    def move(self, movement) :
+        move_dictionary = {
+            'north' : self.move_north,
+            'south' :self.move_south,
+            'west' : self.move_west,
+            'east' : self.move_east
+        }
+        move_dictionary[movement]()
 
-    def move_up(self):
+    def move_north(self):
         self.y_coordinate += 1
 
-    def move_down(self):
+    def move_south(self):
         self.y_coordinate -= 1
 
-    def move_right(self):
-        self.x_coordinate += 1
-
-    def move_left(self):
+    def move_west(self):
         self.x_coordinate -= 1
 
+    def move_east(self):
+        self.x_coordinate += 1
+
+   
         ##For tests
     def get_coordinates(self):
         print('My current position is X = ' + str(self.x_coordinate) + ' AND Y = ' +  str(self.y_coordinate))
