@@ -20,14 +20,14 @@ class Game:
         #     [{"code" : 'wall'}, {"code" : 'wall'},{"code" : 'wall'}, {"code" : 'wall'}, {"code" : 'into'},{"code" : 'wall'}, {"code" : 'wall'}]]
 
         Maze = [
-           ['wall', 'end', 'wall', 'wall', 'star', 'wall', 'wall'],
+           ['wall', 'exit', 'wall', 'wall', 'star', 'wall', 'wall'],
            ['wall', 'foot', 'loud', 'meds', 'foot', 'meds', 'wall'],
            ['wall', 'loud', 'wall', 'wall', 'wall', 'wall', 'wall'],
            ['wall', 'meds', 'foot', 'quis', 'quis', 'wall', 'wall'],
            ['wall', 'wall', 'wall', 'wall', 'star', 'wall', 'wall']]
 
         Puzzle_Room = [
-            ['wall', 'end', 'wall', 'wall', 'star', 'wall', 'wall'],
+            ['wall', 'exit', 'wall', 'wall', 'star', 'wall', 'wall'],
            ['wall', 'foot', 'loud', 'meds', 'foot', 'meds', 'wall'],
            ['wall', 'loud', 'wall', 'wall', 'wall', 'wall', 'wall'],
            ['wall', 'meds', 'foot', 'quis', 'quis', 'wall', 'wall'],
@@ -40,12 +40,12 @@ class Game:
         self.puzzle_room = Grid(grid_configuration = Puzzle_Room)
 
     def move(self, movement) :
-        new_room_code = self.maze.get_new_room_code(self.player.x_coordinate, self.player.y_coordinate, movement)
+        new_tile_code = self.maze.get_new_tile(self.player.x_coordinate, self.player.y_coordinate, movement).code
         
-        if(new_room_code != 'wall') :
+        if(new_tile_code != 'wall') :
             self.player.move(movement)
 
-        return new_room_code
+        return new_tile_code
         
         
 
@@ -54,13 +54,13 @@ class Game:
         room_code = ""
         user_input = user_input.lower()
         command_dictionary = {
-            'forward' : self.move('north'),
-            'back' : self.move('south'),
-            'left' : self.move('west'),
-            'right': self.move('east')
+            'forward' : 'north',
+            'back' : 'south',
+            'left' : 'west',
+            'right': 'east'
         }
         
-        room_code = command_dictionary[user_input]
+        room_code = self.move(command_dictionary[user_input])
 
         response_audio = speech_text_library(room_code)
 
@@ -83,9 +83,10 @@ def speech_text_library(selection) :
     library = {
         'into' : "Welcome to Saving Shiraz Beta" + Audio('intro'),
         'exit' : Audio('outro'),
-        'quie' : Audio('footsteps') + Audio('quiet shiraz'),
-        'medi' : Audio('footsteps') + Audio('medium shiraz'),
+        'quis' : Audio('footsteps') + Audio('quiet shiraz'),
+        'meds' : Audio('footsteps') + Audio('medium shiraz'),
         'loud' : Audio('footsteps') + Audio('loud shiraz'),
-        'wall' : Audio('wall')
+        'wall' : Audio('wall'),
+        'foot' : Audio('footsteps')
     }
     return library[selection]

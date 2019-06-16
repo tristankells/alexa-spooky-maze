@@ -15,7 +15,7 @@ class Grid:
     ## Takes a list in the form ['quiet noise', 1, 1, 0 , 1] for example and constructs a tile.
     ##
     def tile_constructor(self, tile_configuration):
-        audio_clip = tile_configuration[0]
+        audio_clip = tile_configuration
 
         return Tile( audio_clip)
 
@@ -43,7 +43,7 @@ class Grid:
     def get_tile(self, x_coordinate, y_coordinate):
         return self.grid[-y_coordinate][x_coordinate-1]
 
-    def get_new_room_code(self, x_coordinate, y_coordinate, direction) :
+    def get_new_tile(self, x_coordinate, y_coordinate, direction) :
         if(direction == 'north'):  return self.get_tile(x_coordinate, y_coordinate + 1)
         elif(direction == 'south'): return self.get_tile(x_coordinate, y_coordinate - 1)
         elif(direction == 'west'): return self.get_tile(x_coordinate -1, y_coordinate)

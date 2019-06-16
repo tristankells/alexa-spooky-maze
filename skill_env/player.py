@@ -21,15 +21,19 @@ class Player:
         move_dictionary[movement]()
 
     def move_north(self):
+        print('North')
         self.y_coordinate += 1
 
     def move_south(self):
+        print('South')
         self.y_coordinate -= 1
 
     def move_west(self):
+        print('West')
         self.x_coordinate -= 1
 
     def move_east(self):
+        print('East')
         self.x_coordinate += 1
 
    
