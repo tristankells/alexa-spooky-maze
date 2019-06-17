@@ -1,43 +1,25 @@
-##
-## Games class. Store a player object
-##
-from grid import Grid
+
+
+from room import Room
 from player import Player
 from audio import Audio
 
-
-
-
-
+# Games class. Store a player object
+# MemberVariables :
+#   code : A string of characters representing the room event (audio file etc..)
 class Game:
 
-    def __init__(self, state_variables):
-        # Maze = [
-        #     [{"code" : 'wall'}, {"code" : 'outr'},{"code" : 'wall'}, {"code" : 'wall'}, {"code" : 'wall'},{"code" : 'wall'}, {"code" : 'wall'}],
-        #     [{"code" : 'wall'}, {"code" : 'foot'},{"code" : 'wall'}, {"code" : 'wall'}, {"code" : 'wall'},{"code" : 'wall'}, {"code" : 'wall'}],
-        #     [{"code" : 'wall'}, {"code" : 'foot'},{"code" : 'wall'}, {"code" : 'wall'}, {"code" : 'wall'},{"code" : 'wall'}, {"code" : 'wall'}],
-        #     [{"code" : 'wall'}, {"code" : 'foot'},{"code" : 'foot'}, {"code" : 'foot'}, {"code" : 'foot'},{"code" : 'wall'}, {"code" : 'wall'}],
-        #     [{"code" : 'wall'}, {"code" : 'wall'},{"code" : 'wall'}, {"code" : 'wall'}, {"code" : 'into'},{"code" : 'wall'}, {"code" : 'wall'}]]
+    Maze = [
+             [{"code" : 'wall'}, {"code" : 'exit'},{"code" : 'wall'}, {"code" : 'wall'}, {"code" : 'star'},{"code" : 'wall'}, {"code" : 'wall'}],
+             [{"code" : 'wall'}, {"code" : 'foot'},{"code" : 'loud'}, {"code" : 'meds'}, {"code" : 'foot'},{"code" : 'meds'}, {"code" : 'wall'}],
+             [{"code" : 'wall'}, {"code" : 'loud'},{"code" : 'wall'}, {"code" : 'wall'}, {"code" : 'wall'},{"code" : 'wall'}, {"code" : 'wall'}],
+             [{"code" : 'wall'}, {"code" : 'meds'},{"code" : 'foot'}, {"code" : 'quis'}, {"code" : 'quis'},{"code" : 'wall'}, {"code" : 'wall'}],
+             [{"code" : 'wall'}, {"code" : 'wall'},{"code" : 'wall'}, {"code" : 'wall'}, {"code" : 'star'},{"code" : 'wall'}, {"code" : 'wall'}]]
 
-        Maze = [
-           ['wall', 'exit', 'wall', 'wall', 'star', 'wall', 'wall'],
-           ['wall', 'foot', 'loud', 'meds', 'foot', 'meds', 'wall'],
-           ['wall', 'loud', 'wall', 'wall', 'wall', 'wall', 'wall'],
-           ['wall', 'meds', 'foot', 'quis', 'quis', 'wall', 'wall'],
-           ['wall', 'wall', 'wall', 'wall', 'star', 'wall', 'wall']]
+    def __init__(self, game_dict): 
+        self.player = Player(game_dict['coordinates'])
+        self.maze = Room(self.Maze)
 
-        Puzzle_Room = [
-            ['wall', 'exit', 'wall', 'wall', 'star', 'wall', 'wall'],
-           ['wall', 'foot', 'loud', 'meds', 'foot', 'meds', 'wall'],
-           ['wall', 'loud', 'wall', 'wall', 'wall', 'wall', 'wall'],
-           ['wall', 'meds', 'foot', 'quis', 'quis', 'wall', 'wall'],
-           ['wall', 'wall', 'wall', 'wall', 'star', 'wall', 'wall']
-        ]
-       
-         
-        self.player = Player(state_variables['coordinates'])
-        self.maze = Grid(grid_configuration = Maze)
-        self.puzzle_room = Grid(grid_configuration = Puzzle_Room)
 
     def move(self, movement) :
         new_tile_code = self.maze.get_new_tile(self.player.x_coordinate, self.player.y_coordinate, movement).code
