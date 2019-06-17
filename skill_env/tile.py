@@ -1,5 +1,9 @@
 
-# Tile class. Represnts space in either room or the maze. Store a code, which represents an audio file and is used to indicate if certain actions can take within the tile (Turn on tractor etc...)
+# Class : Tile 
+#   Represnts space in either room or the maze. Store a code, which 
+#   represents an audio file and is used to indicate if certain actions can 
+#   take within the tile (Turn on tractor etc...)
+
 # MemberVariables :
 #   code : A string of characters representing the room event (audio file etc..)
 #   

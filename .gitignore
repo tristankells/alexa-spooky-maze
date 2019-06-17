@@ -8,11 +8,11 @@
 !README.md
 !player.py
 !tile.py
-!grid.py
+!room.py
 !game.py
-!row.py
-!alexa_state_tester.py
+!missing_the_text_adventure.py
 !audio.py
+!text_translator
 # etc...
 
 # ...even if they are in subdirectories

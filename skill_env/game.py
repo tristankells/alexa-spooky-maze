@@ -6,10 +6,10 @@ from audio import Audio
 
 # Games class. Store a player object
 # MemberVariables :
-#   code : A string of characters representing the room event (audio file etc..)
+#   maze : A string of characters representing the room event (audio file etc..)
 class Game:
 
-    Maze = [
+    maze_list = [
              [{"code" : 'wall'}, {"code" : 'exit'},{"code" : 'wall'}, {"code" : 'wall'}, {"code" : 'star'},{"code" : 'wall'}, {"code" : 'wall'}],
              [{"code" : 'wall'}, {"code" : 'foot'},{"code" : 'loud'}, {"code" : 'meds'}, {"code" : 'foot'},{"code" : 'meds'}, {"code" : 'wall'}],
              [{"code" : 'wall'}, {"code" : 'loud'},{"code" : 'wall'}, {"code" : 'wall'}, {"code" : 'wall'},{"code" : 'wall'}, {"code" : 'wall'}],
@@ -18,7 +18,7 @@ class Game:
 
     def __init__(self, game_dict): 
         self.player = Player(game_dict['coordinates'])
-        self.maze = Room(self.Maze)
+        self.maze = Room(self.maze_list)
 
 
     def move(self, movement) :
@@ -44,14 +44,7 @@ class Game:
         
         room_code = self.move(command_dictionary[user_input])
 
-        response_audio = speech_text_library(room_code)
-
-        return response_audio
-
-        
-    def print_player_status(self):
-        print("You position is now X = " + str(self.player.x_coordinate) + " Y = " + str(self.player.y_coordinate))
-        print("Room Audio: " + self.maze.get_tile(self.player.x_coordinate,self.player.y_coordinate).audio_clip)
+        return room_code
 
     def get_game_variables(self):
         return {'coordinates' : {
@@ -61,14 +54,3 @@ class Game:
     
 
     
-def speech_text_library(selection) :
-    library = {
-        'into' : "Welcome to Saving Shiraz Beta" + Audio('intro'),
-        'exit' : Audio('outro'),
-        'quis' : Audio('footsteps') + Audio('quiet shiraz'),
-        'meds' : Audio('footsteps') + Audio('medium shiraz'),
-        'loud' : Audio('footsteps') + Audio('loud shiraz'),
-        'wall' : Audio('wall'),
-        'foot' : Audio('footsteps')
-    }
-    return library[selection]
