@@ -11,7 +11,8 @@ from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
 from ask_sdk_model.ui import SimpleCard
-from missing_skill.game import Game
+from game import Game
+from audio_translator import Translator
 
 from ask_sdk_model import Response
 
@@ -21,10 +22,7 @@ sb = StandardSkillBuilder(table_name="High-Low-Game", auto_create_table=True)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-global_game = Game({'coordinates' :{
-    'x' : 0,
-    'y' : 0
-}})
+game = Game()
 
 @sb.request_handler(can_handle_func=is_request_type("LaunchRequest"))
 def launch_request_handler(handler_input):
@@ -33,24 +31,53 @@ def launch_request_handler(handler_input):
     Get the persistence attributes, to figure out the game state.
     """
     # type: (HandlerInput) -> Response
-    state_variables = handler_input.attributes_manager.persistent_attributes
-    if not state_variables:
-        state_variables['ended_session_count'] = 0
-        state_variables['games_played'] = 0
-        state_variables['game_state'] = 'ENDED'
-        state_variables['x'] = 5
-        state_variables['y'] = 1
-        state_variables['number_turns_remaining'] = 8
+    game_variables = handler_input.attributes_manager.persistent_attributes
+    if not game_variables:
+        game_variables['ended_session_count'] = 0
+        game_variables['games_played'] = 0
+        game_variables['game_state'] = 'ENDED'
+        game_variables['coordinates'] = {
+            'x' : 5,
+            'y' : 1
+        }
+        game_variables['number_turns_remaining'] = 8
 
+    handler_input.attributes_manager.session_attributes = game_variables
 
-    handler_input.attributes_manager.session_attributes = state_variables
-
-
-    response = global_game.game_intro()
-    # speech_text = ("Welcome to Saving Shiraz. Use your voice to navigate using the commands: move forward, move back, move right, or move left. Follow your son’s voice and watch out for walls and dead ends. Good luck" + (get_audio_element(2)))
+    response = Translator(game.handle_launch_input())
     reprompt = "Say yes to start the game or no to quit."
 
     handler_input.response_builder.speak(response).ask(reprompt)
+
+    return handler_input.response_builder.response
+
+#
+#  MOVE INTENT
+#                                 
+
+@sb.request_handler(can_handle_func = lambda input:
+                    is_intent_name("MoveIntent")(input))
+def movement_handler(handler_input):
+    """Handler for processing guess with target."""
+    # type: (HandlerInput) -> Response
+
+
+    direction = str(handler_input.request_envelope.request.intent.slots["movement"].value) # value of movement slot
+
+    game_variables = handler_input.attributes_manager.session_attributes # session variables
+
+    game.setup(game_variables)
+    
+    game_response = game.handle_move_input(direction)
+
+    handler_input.attributes_manager.session_attributes = game.game_variables()
+
+    response = Translator(game_response)
+
+    reprompt = "Where now?"
+    
+    handler_input.response_builder.speak(response).ask(reprompt)
+
     return handler_input.response_builder.response
 
 
@@ -148,41 +175,7 @@ def no_handler(handler_input):
     handler_input.response_builder.speak(speech_text)
     return handler_input.response_builder.response
 
-##
-## MOVE INTENT
-##
 
-
-@sb.request_handler(can_handle_func=lambda input:
-                    is_intent_name("MoveIntent")(input))
-def movement_handler(handler_input):
-    """Handler for processing guess with target."""
-    # type: (HandlerInput) -> Response
-
-    global global_game
-
-    direction = str(handler_input.request_envelope.request.intent.slots["movement"].value) # value of movement slot
-    session_attr = handler_input.attributes_manager.session_attributes # session variables
-
-    x = session_attr['x']
-    y = session_attr['y']
-
-    global_game.player.set_coordinates({
-        'x' : x,
-        'y' : y
-    })
-    
-    game_response = global_game.handle_move_input(direction)()
-    game_variables = global_game.get_game_variables()
-
-    session_attr['x'] = game_variables['coordinates']['x']
-    session_attr['y'] = game_variables['coordinates']['y']
-
-    handler_input.attributes_manager.session_attributes = session_attr
-    reprompt = "Where now?"
-    handler_input.response_builder.speak(game_response).ask(reprompt)
-
-    return handler_input.response_builder.response
 
 
 @sb.request_handler(can_handle_func=lambda input:

@@ -20,12 +20,20 @@ class missing_the_text_adventure :
     game_active = True
 
     def play(self) :
-        print(Translator('into'))
+        game = Game()
+
+        print(Translator(game.handle_launch_input()))
+
         while(self.game_active):
+
             user_input = input()
-            fresh_game = Game(self.state_variables)
-            game_response = fresh_game.handle_move_input(user_input)
-            self.save(fresh_game.get_game_variables())
-            print(Translator(game_response))
+
+            game.setup(self.state_variables)
+
+            print(Translator(game.handle_move_input(user_input)))
+
+            self.save(game.game_variables())
+
+            
 
 missing_the_text_adventure().play()

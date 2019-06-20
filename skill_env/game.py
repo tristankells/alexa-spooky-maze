@@ -16,20 +16,15 @@ class Game:
              [{"code" : 'wall'}, {"code" : 'meds'},{"code" : 'foot'}, {"code" : 'quis'}, {"code" : 'quis'},{"code" : 'wall'}, {"code" : 'wall'}],
              [{"code" : 'wall'}, {"code" : 'wall'},{"code" : 'wall'}, {"code" : 'wall'}, {"code" : 'star'},{"code" : 'wall'}, {"code" : 'wall'}]]
 
-    def __init__(self, game_dict): 
-        self.player = Player(game_dict['coordinates'])
+    def __init__(self): 
         self.maze = Room(self.maze_list)
 
+    def setup(self, game_dict):
+        self.player = Player(game_dict['coordinates'])
 
-    def move(self, movement) :
-        new_tile_code = self.maze.get_new_tile(self.player.x_coordinate, self.player.y_coordinate, movement).code
-        
-        if(new_tile_code != 'wall') :
-            self.player.move(movement)
+    def handle_launch_input(self):
+        return 'into'
 
-        return new_tile_code
-        
-        
 
     def handle_move_input(self, user_input):
         response_audio = ""
@@ -46,7 +41,15 @@ class Game:
 
         return room_code
 
-    def get_game_variables(self):
+    def move(self, movement) :
+        new_tile_code = self.maze.get_new_tile(self.player.x_coordinate, self.player.y_coordinate, movement).code
+        
+        if(new_tile_code != 'wall') :
+            self.player.move(movement)
+
+        return new_tile_code
+
+    def game_variables(self):
         return {'coordinates' : {
             'x' : self.player.x_coordinate , 
             'y': self.player.y_coordinate
