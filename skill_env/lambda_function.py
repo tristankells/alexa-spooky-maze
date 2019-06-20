@@ -11,7 +11,7 @@ from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
 from ask_sdk_model.ui import SimpleCard
-from game import Game
+from missing_skill.game import Game
 
 from ask_sdk_model import Response
 
@@ -183,21 +183,6 @@ def movement_handler(handler_input):
     handler_input.response_builder.speak(game_response).ask(reprompt)
 
     return handler_input.response_builder.response
-
-
-
-def get_audio_element(audio_selection):
-    switcher = {
-       0: "Into", 
-       1: "Quiet+Shiraj",
-       2: "Medium+Shiraj",
-       3: "Loud+shiraj", 
-       4: "Hitting+a+wall",
-       5: "footsteps",
-       6: "Outro"
-    }
-    return ("<audio src='https://s3.amazonaws.com/alexa-alexa-sound/" + switcher.get(audio_selection,) +  ".mp3'/>") 
-
 
 
 @sb.request_handler(can_handle_func=lambda input:
