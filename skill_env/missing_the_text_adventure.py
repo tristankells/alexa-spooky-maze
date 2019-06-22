@@ -2,7 +2,7 @@
 from game import Game
 from text_translator import Translator
 
-# Games class. Store a player object
+# This is a text adventure version of the game
 class missing_the_text_adventure :
     # Map room code to texts reponse, 
   
