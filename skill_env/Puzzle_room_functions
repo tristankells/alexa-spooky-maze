@@ -1,0 +1,40 @@
+
+def pick_up_keys(self):
+    if self.has_keys == 0 and (self.player.x_coordinate, self.player.y_coordinate)==(6,4):
+        self.has_keys = 1
+        return Audio['key sound']
+    else:
+        return Audio['no keys']
+
+def start_fork_lift(self):
+    if self.has_keys == 1 and (self.player.x_coordinate, self.player.y_coordinate)==(3,9):
+        self.forklift_on = 1
+        return Audio['start forklift']
+
+    elif self.has_keys == 0 and (self.player.x_coordinate, self.player.y_coordinate)==(3,9):
+        return Audio['no keys for forklift']
+    else:
+        return Audio['failed forklift']
+
+def drive(self):
+    if self.forklift_on and (self.player.x_coordinate, self.player.y_coordinate)==(3,9):
+        return Audio['break wall']
+    else:
+        print("You're either not in the forklift or it's not been started")
+
+
+class Variables:
+    ##Variable constructor. Set status of variables
+    def __init__(self,variables):
+        self.forklift_on = variables['forklift_on']
+        self.has_keys = variables['has_keys']
+
+    def set_variables(self, variables) :
+        self.forklift_on = variables['forklift_on']
+        self.has_keys = variables['has_keys']
+
+        ##For tests
+    def get_variables(self):
+        print('forkift on: ' + str(self.forklift_on) + ' AND has_keys = ' +  str(self.has_keys))
+
+        
